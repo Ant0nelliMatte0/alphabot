@@ -15,4 +15,5 @@ nella tabella seguente vengono riportati i movimenti composti che possono essere
 | `ESSE`  | Questo comando consente di far muovere l'Alphabot nella maniera tale da percorrere una S immaginaria   |
 | `TRIANGOLO`  | Questo comando consente di far muovere l'Alphabot nella maniera tale da creare un triangolo immaginario    | 
 | `QUADRATO`  | Questo comando consente di far muovere l'Alphabot nella maniera tale da creare un quadrato immaginario  |
-
+| `ZIG-ZAG`  | Questo comando consente di far muovere l'Alphabot a zig-zag  |
+| `GIRAVOLTA`  | Questo comando consente di far muovere l'Alphabot in modo da compiere un giro completo su se stesso  |
