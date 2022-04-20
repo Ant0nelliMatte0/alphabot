@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <style>
+         input[type=submit] {
+    padding:5px 15px; 
+    background:#ccc; 
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+    }
+
+                 
+    </style>
+    <head>
+        <h1 style="text-align: center;">COMANDI DI MOVIMENTO</h1>
+    </head>
+    <body>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        
+
+        <form method="post" >
+            <table style = "margin-left: auto; margin-right: auto;" id="tblComandi">
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="forward" name="action_forward"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" value="turn_left" name="action_turn_left"></td>
+                    <td><input type="submit" value="stop" name="action_stop"></td>
+                    <td><input type="submit" value="turn_right" name="action_turn_right"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="backward" name="action_backward"></td>
+                    <td></td>
+                </tr>
+            </table>
+            <input type="text" placeholder="Movimento" name="movimento" value="{{
+                request.form.movimento }}">
+            <input class="btn btn-default" type="submit" value="movement" name="do_movement">
+        </form>
+        {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
+    </body>
+</html>

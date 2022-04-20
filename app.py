@@ -1,7 +1,8 @@
 
+from crypt import methods
 from errno import ESTALE
 import imp
-from flask import Flask, render_template, request,redirect,url_for,make_response
+from flask import Flask, jsonify, render_template, request,redirect,url_for,make_response
 import RPi.GPIO as GPIO
 import time
 import socket as sck
@@ -12,6 +13,9 @@ from datetime import datetime
 app = Flask(__name__)
 date= ""
 token= ""
+
+DL = 19
+DR = 16
 for _ in range(0,20):
     c = random.choice(string.ascii_letters)
     token = token + c
@@ -130,6 +134,56 @@ def index():
         return render_template('index.html')
     return render_template("index.html")
 
+@app.route('/api/v1/sensors/obstacles',methods = ['GET','POST'])
+def api_obstacles():
+    DL_status = GPIO.input(DL)
+    DR_status = GPIO.input(DR)
+    dizionario = {'right':DR_status,'left':DL_status}
+    return jsonify(dizionario)
+
+@app.route('/api/v1/motors/left',methods = ['GET','POST'])
+def api_motor_left():
+    try:
+        if 'pwm' in request.args:
+            pwm = float(request.args['pwm'])
+        if 'time' in request.args:
+            t = float(request.args['time'])
+        Ab.set_motor(pwm,0)
+        time.sleep(t)
+        Ab.stop()
+        return '1'
+    except:
+        return '0'
+    
+@app.route('/api/v1/motors/right',methods = ['GET','POST'])
+def api_motor_right():
+    try:
+        if 'pwm' in request.args:
+            pwm = float(request.args['pwm'])
+        if 'time' in request.args:
+            t = float(request.args['time'])
+        Ab.set_motor(0,pwm)
+        time.sleep(t)
+        Ab.stop()
+        return '1'
+    except:
+        return '0'
+    
+@app.route('/api/v1/motors/both',methods = ['GET','POST'])
+def api_motor_both():
+    try:
+        if 'pwm' in request.args:
+            pwm = float(request.args['pwm'])
+        if 'time' in request.args:
+            t = float(request.args['time'])
+        Ab.set_motor(pwm,pwm)
+        time.sleep(t)
+        Ab.stop()
+        return '1'
+    except:
+        return '0'
+
+    
 class AlphaBot():  
     
     def __init__(self, in1=13, in2=12, ena=6, in3=21, in4=20, enb=26):
@@ -156,7 +210,7 @@ class AlphaBot():
         self.PWMB.start(self.PB)
         self.stop()
 
-    def left(self,t, speed=30):
+    def left(self,t, speed):
         self.PWMA.ChangeDutyCycle(speed)
         self.PWMB.ChangeDutyCycle(speed)
         GPIO.output(self.IN1, GPIO.HIGH)
@@ -215,6 +269,7 @@ class AlphaBot():
         self.PWMB.ChangeDutyCycle(self.PB)    
         
     def set_motor(self, left, right):
+        right=-right
         if (right >= 0) and (right <= 100):
             GPIO.output(self.IN1, GPIO.HIGH)
             GPIO.output(self.IN2, GPIO.LOW)
@@ -235,4 +290,8 @@ class AlphaBot():
 
 if __name__ == '__main__':
     Ab = AlphaBot()
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    GPIO.setup(DR,GPIO.IN,GPIO.PUD_UP)
+    GPIO.setup(DL,GPIO.IN,GPIO.PUD_UP)
     app.run(debug=True, host='0.0.0.0')
